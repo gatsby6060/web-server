@@ -273,7 +273,6 @@ app.get('/board/insert', async (req, res) => {
 
 
 
-
 //보드테이블 내용업데이트목적------------------------------------------------------S
 app.get('/board/update', async (req, res) => {
   const { boardNo, title, userId, contents, kind } = req.query;
@@ -289,7 +288,7 @@ app.get('/board/update', async (req, res) => {
   try {
     await connection.execute(
       query,
-      [boardNo, title, userId, contents, kind],
+      [],
       { autoCommit: true }
     );
     res.json({
@@ -301,6 +300,8 @@ app.get('/board/update', async (req, res) => {
   }
 });
 //보드테이블 내용업데이트목적------------------------------------------------------E
+
+
 
 
 
