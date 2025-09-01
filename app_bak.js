@@ -6,7 +6,20 @@ const oracledb = require('oracledb');
 const app = express();
 app.use(cors());
 // 전경환 추가-----------------------------------------S
+// app.use(cors({
+//   origin:[
+//     'https://gatsby6060.github.io',
+//     'https://gatsby6060.github.io/introduce'
+//   ],
+//   credentials: true
+// }));
 
+// const API_BASE = 'https://db42aa577071.ngrok-free.app' 
+// fetch(`${API_BASE}/board/list?option=all&keyword=`)
+//   .then(r=>r.json())
+//   .then(({list})=> {
+//     //list를 화면에 랜더링?
+//   })
 // 전경환 추가-----------------------------------------E
 
 // ejs 설정
@@ -278,7 +291,7 @@ app.get('/board/insert', async (req, res) => {
 
 //보드테이블 내용업데이트목적------------------------------------------------------S
 app.get('/board/update', async (req, res) => {
-  const { boardNo, title, userId, contents, kind } = req.query; //보낼때의 값을 잘 맞춰서 적어줘야 인식함
+  const { boardNo, title, userId, contents, kind } = req.query;
   let query = `UPDATE TBL_BOARD SET `
               + `TITLE = '${title}', ` 
               + `CONTENTS = '${contents}', ` 
@@ -303,40 +316,6 @@ app.get('/board/update', async (req, res) => {
   }
 });
 //보드테이블 내용업데이트목적------------------------------------------------------E
-
-
-
-
-
-app.get('/login', async (req, res) => {
-  const { userId, pwd } = req.query; //보낼때의 이름 맞춰서...
-  let query = `SELECT * FROM TBL_USER WHERE USERID= '${userId}' AND PASSWORD = '${pwd}'`
-  try {
-    const result = await connection.execute(query);
-    const columnNames = result.metaData.map(column => column.name);
-
-    // 쿼리 결과를 JSON 형태로 변환
-    const rows = result.rows.map(row => {
-      // 각 행의 데이터를 컬럼명에 맞게 매핑하여 JSON 객체로 변환
-      const obj = {};
-      columnNames.forEach((columnName, index) => {
-        obj[columnName] = row[index];
-      });
-      return obj;
-    });
-    res.json(rows);
-  } catch (error) {
-    console.error('Error executing query', error);
-    res.status(500).send('Error executing query');
-  }
-});
-
-
-
-
-
-
-
 
 
 
