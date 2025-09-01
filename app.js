@@ -183,6 +183,60 @@ app.get('/board/list', async (req, res) => {
 
 
 
+
+
+
+
+app.get('/board/listorderby', async (req, res) => {
+  const { option2 } = req.query;
+  let subQuery = "";
+  if (option2 == "all") {
+    subQuery = ``;
+  } else if (option2 == "CDATETIME DESC") {
+    subQuery = `ORDER BY ${option2}`;
+  } else if (option2 == "CDATETIME ASC") {
+    subQuery = `ORDER BY ${option2}`;
+  } else if (option2 =="CNT DESC"){
+    subQuery = `ORDER BY ${option2}`;
+  } else{
+    subQuery = ``;
+  }
+
+  let query = `SELECT B.*, TO_CHAR(CDATETIME, 'YYYY-MM-DD') CTIME `
+              + `FROM TBL_BOARD B `
+              +  subQuery;
+  console.log(query);
+
+  try {
+    const result = await connection.execute(query);
+    const columnNames = result.metaData.map(column => column.name);
+    // 쿼리 결과를 JSON 형태로 변환
+    const rows = result.rows.map(row => {
+      // 각 행의 데이터를 컬럼명에 맞게 매핑하여 JSON 객체로 변환
+      const obj = {};
+      columnNames.forEach((columnName, index) => {
+        obj[columnName] = row[index];
+      });
+      return obj;
+    });
+    res.json({
+      result: "success",
+      list: rows
+    });
+  } catch (error) {
+    console.error('Error executing query', error);
+    res.status(500).send('Error executing query');
+  }
+});
+
+
+
+
+
+
+
+
+
 app.get('/board/view', async (req, res) => {
   const { boardNo } = req.query;
   try {
